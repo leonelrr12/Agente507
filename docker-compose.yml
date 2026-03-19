@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres
+    container_name: agencia-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=db_agencia_507
+
+  api:
+    build: .
+    container_name: insurance_api
+    restart: always
+    ports:
+      - "3000:3005"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run start:dev
+

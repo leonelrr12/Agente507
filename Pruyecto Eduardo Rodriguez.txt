@@ -1,0 +1,454 @@
+
+
+Eres un especialista en desarroll de software web.  Un arquitecto de software. El desarrollo debe ser respisive: PC, tablet y celular.
+Hola tengo una agencia de venta de polizas seguros de automovil (danos a terceros y cobertura completa), polizas de salud y polizas de vida con y sin ahorro.  Necesito un desarrollo o que me permita gestionar las renovaciones y vencimientos de cada una de estas polizas.  Se dispone de un archivo que viene de las empresas de seguros en donde se indica el vencimiento de cada poliza.  Adicional tenemos otro reporte en donde se indican las polizas que no han realizado pagos y que tiene atrasos en sus obligaciones, Tambien se debe poder dar seguimiento para salvar esta poliza y que no se cancele. 
+Con esta informacion arma un reporte de requerimiento para el desarrollo.
+
+
+Aquí tienes un **Product Requirements Document (PRD)** completo, pensado desde arquitectura profesional, enfocado en **gestión de pólizas, renovaciones y cobranza**, y diseñado como **aplicación web responsive (PC, tablet y móvil)**.
+
+---
+
+# PRD — Sistema de Gestión de Pólizas, Renovaciones y Cobranza
+
+**Versión:** 1.0
+**Fecha:** Marzo 2026
+**Autor:** Arquitectura de Software
+
+---
+
+# 1. Resumen del Producto
+
+## 1.1 Descripción
+
+Sistema web para una agencia de seguros que permite:
+
+* Gestionar pólizas de:
+
+  * Automóvil (daños a terceros / cobertura completa)
+  * Salud
+  * Vida (con y sin ahorro)
+* Controlar **vencimientos y renovaciones**
+* Identificar **pólizas con mora o atraso**
+* Dar **seguimiento comercial y de cobranza**
+* Evitar cancelaciones mediante gestión proactiva
+
+El sistema se alimenta de **archivos externos (reportes de aseguradoras)**.
+
+---
+
+# 2. Objetivos del Sistema
+
+## 2.1 Objetivo principal
+
+Centralizar y automatizar la gestión de:
+
+* Renovaciones
+* Cobranza
+* Seguimiento de clientes
+
+---
+
+## 2.2 Objetivos específicos
+
+* Reducir cancelaciones de pólizas
+* Aumentar tasa de renovación
+* Mejorar control de cartera
+* Dar visibilidad en tiempo real
+* Automatizar tareas repetitivas
+
+---
+
+# 3. Alcance (MVP)
+
+## Incluye:
+
+* Importación de archivos de aseguradoras
+* Registro y gestión de pólizas
+* Gestión de clientes
+* Control de vencimientos
+* Control de morosidad
+* Seguimiento de casos
+* Dashboard operativo
+* Sistema responsive
+
+---
+
+## No incluye (Fase futura):
+
+* Integración directa con aseguradoras (API)
+* Notificaciones automáticas (WhatsApp/SMS)
+* Firma digital
+* Pagos en línea
+
+---
+
+# 4. Tipos de Usuario
+
+En esta fase todos tienen permisos similares, pero se contempla expansión futura:
+
+* Ejecutivo de ventas
+* Ejecutivo de cobranza
+* Supervisor
+* Administrador
+
+---
+
+# 5. Funcionalidades Principales
+
+---
+
+## 5.1 Gestión de Clientes
+
+### Datos del cliente:
+
+* Nombre
+* Cédula / identificación
+* Teléfono
+* Email
+* Dirección
+
+---
+
+## 5.2 Gestión de Pólizas
+
+### Datos de la póliza:
+
+* Número de póliza
+* Tipo:
+
+  * Auto
+  * Salud
+  * Vida
+* Subtipo (ej: cobertura completa)
+* Aseguradora
+* Fecha de inicio
+* Fecha de vencimiento
+* Estado:
+
+  * Activa
+  * En riesgo
+  * Vencida
+  * Cancelada
+* Monto
+* Frecuencia de pago
+
+---
+
+## 5.3 Importación de Archivos
+
+El sistema debe permitir cargar:
+
+### Archivo 1: Vencimientos
+
+Contiene:
+
+* Número de póliza
+* Cliente
+* Fecha de vencimiento
+
+---
+
+### Archivo 2: Mora / Atrasos
+
+Contiene:
+
+* Número de póliza
+* Días de atraso
+* Monto pendiente
+
+---
+
+### Requisitos:
+
+* Subida de archivos CSV o Excel
+* Validación de datos
+* Matching automático de pólizas
+* Registro de errores
+
+---
+
+## 5.4 Gestión de Renovaciones
+
+El sistema debe:
+
+* Detectar pólizas próximas a vencer
+* Clasificar por:
+
+  * 30 días
+  * 15 días
+  * 7 días
+* Generar lista de seguimiento
+
+---
+
+## 5.5 Gestión de Mora (Cobranza)
+
+El sistema debe:
+
+* Identificar pólizas en mora
+* Clasificar por días:
+
+  * 1–30 días
+  * 31–60 días
+  * +60 días
+* Mostrar riesgo de cancelación
+
+---
+
+## 5.6 Seguimiento de Casos
+
+Cada póliza puede tener seguimiento:
+
+### Acciones:
+
+* Llamada realizada
+* Cliente contactado
+* Promesa de pago
+* Renovación gestionada
+* Caso cerrado
+
+---
+
+### Campos:
+
+* Fecha
+* Usuario
+* Comentarios
+* Próxima acción
+
+---
+
+## 5.7 Dashboard
+
+Debe mostrar:
+
+* Pólizas por vencer
+* Pólizas en mora
+* Pólizas salvadas
+* Pólizas canceladas
+* Actividad reciente
+
+---
+
+# 6. Flujo del Sistema
+
+## Flujo principal
+
+```text
+Carga de archivo
+      ↓
+Procesamiento
+      ↓
+Actualización de pólizas
+      ↓
+Identificación de riesgos
+      ↓
+Asignación de seguimiento
+      ↓
+Gestión del usuario
+```
+
+---
+
+# 7. Requisitos Funcionales
+
+* CRUD de clientes
+* CRUD de pólizas
+* Importación de archivos
+* Gestión de estados
+* Registro de seguimientos
+* Búsqueda y filtros
+
+---
+
+# 8. Requisitos No Funcionales
+
+## 8.1 Responsive
+
+Debe funcionar correctamente en:
+
+* Desktop
+* Tablet
+* Móvil
+
+---
+
+## 8.2 Performance
+
+* Soportar miles de pólizas
+* Procesar archivos grandes
+
+---
+
+## 8.3 Seguridad
+
+* Autenticación segura
+* Control de acceso
+* Protección de datos sensibles
+
+---
+
+# 9. Modelo de Datos (Resumen)
+
+### Clientes
+
+* id
+* nombre
+* telefono
+* email
+
+---
+
+### Pólizas
+
+* id
+* numero_poliza
+* cliente_id
+* tipo
+* aseguradora
+* fecha_vencimiento
+* estado
+
+---
+
+### Pagos / Mora
+
+* id
+* poliza_id
+* dias_atraso
+* monto_pendiente
+
+---
+
+### Seguimientos
+
+* id
+* poliza_id
+* usuario_id
+* comentario
+* fecha
+* proxima_accion
+
+---
+
+# 10. Arquitectura del Sistema
+
+## 10.1 Arquitectura recomendada
+
+```text
+Frontend (Web)
+    ↓
+Backend API
+    ↓
+Base de datos
+```
+
+---
+
+## 10.2 Stack sugerido
+
+### Frontend
+
+* React / Next.js
+* Tailwind
+
+### Backend
+
+* Node.js (NestJS)
+* API REST
+
+### Base de datos
+
+* PostgreSQL
+
+---
+
+# 11. UX / UI
+
+## Pantallas principales
+
+* Login
+* Dashboard
+* Clientes
+* Pólizas
+* Seguimientos
+* Importación de archivos
+
+---
+
+# 12. Métricas clave
+
+* % renovación
+* % cancelación
+* mora total
+* recuperación de cartera
+
+---
+
+# 13. Roadmap
+
+## Fase 1 (MVP)
+
+* Gestión básica
+* Importación
+* Dashboard simple
+
+---
+
+## Fase 2
+
+* Automatización
+* Alertas
+* Roles
+
+---
+
+## Fase 3
+
+* Integración con aseguradoras
+* Notificaciones
+* Inteligencia de negocio
+
+---
+
+# 14. Riesgos
+
+| Riesgo               | Mitigación        |
+| -------------------- | ----------------- |
+| Datos incorrectos    | validación        |
+| falta de seguimiento | dashboard         |
+| cancelaciones        | alertas tempranas |
+
+---
+
+# 15. Criterios de Aceptación
+
+* Se pueden cargar archivos correctamente
+* El sistema detecta vencimientos
+* El sistema identifica mora
+* Se puede dar seguimiento
+* Dashboard refleja estado real
+
+---
+
+# 16. Oportunidad de Evolución
+
+Este sistema puede evolucionar a:
+
+* CRM de seguros completo
+* Plataforma de cobranza
+* Sistema de fidelización de clientes
+* Plataforma analítica
+
+---
+
+---
+
+Si quieres, el siguiente paso más útil sería que te diseñe:
+
+👉 **El modelo de base de datos completo (SQL / Prisma listo para programar)**
+👉 **O el diseño de pantallas (UI/UX)**
+👉 **O el flujo automatizado de renovaciones con alertas inteligentes**
+
+Eso ya te deja listo para empezar desarrollo inmediatamente.

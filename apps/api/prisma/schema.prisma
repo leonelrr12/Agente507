@@ -1,0 +1,250 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//////////////////////////////////////////////////////
+// ENUMS
+//////////////////////////////////////////////////////
+
+enum RolUsuario {
+  ADMIN
+  AGENTE
+  COBRANZA
+}
+
+enum EstadoPoliza {
+  ACTIVA
+  EN_RIESGO
+  VENCIDA
+  CANCELADA
+}
+
+enum TipoPoliza {
+  AUTO
+  SALUD
+  VIDA
+}
+
+enum NivelMora {
+  LEVE
+  MEDIA
+  CRITICA
+}
+
+enum TipoSeguimiento {
+  LLAMADA
+  EMAIL
+  WHATSAPP
+}
+
+//////////////////////////////////////////////////////
+// USUARIOS
+//////////////////////////////////////////////////////
+
+model Usuario {
+  id           String   @id @default(uuid())
+  nombre       String
+  email        String   @unique
+  passwordHash String
+  rol          RolUsuario @default(AGENTE)
+  activo       Boolean  @default(true)
+
+  seguimientos Seguimiento[]
+  importaciones Importacion[]   // 👈 🔥 AGREGA ESTA LÍNEA
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+//////////////////////////////////////////////////////
+// CLIENTES
+//////////////////////////////////////////////////////
+
+model Cliente {
+  id        String   @id @default(uuid())
+  nombre    String
+  cedula    String?  @db.VarChar(50)
+  telefono  String?
+  email     String?
+  direccion String?
+
+  polizas   Poliza[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  @@index([cedula])
+}
+
+//////////////////////////////////////////////////////
+// ASEGURADORAS
+//////////////////////////////////////////////////////
+
+model Aseguradora {
+  id        String   @id @default(uuid())
+  nombre    String
+
+  polizas   Poliza[]
+
+  createdAt DateTime @default(now())
+}
+
+//////////////////////////////////////////////////////
+// POLIZAS
+//////////////////////////////////////////////////////
+
+model Poliza {
+  id               String   @id @default(uuid())
+  numeroPoliza     String   @unique
+
+  tipo             TipoPoliza
+  subtipo          String?
+
+  fechaInicio      DateTime?
+  fechaVencimiento DateTime
+
+  estado           EstadoPoliza @default(ACTIVA)
+
+  monto            Float?
+  frecuenciaPago   String?
+
+  clienteId        String
+  cliente          Cliente @relation(fields: [clienteId], references: [id])
+
+  aseguradoraId    String?
+  aseguradora      Aseguradora? @relation(fields: [aseguradoraId], references: [id])
+
+  mora             Mora?
+  seguimientos     Seguimiento[]
+  historialEstados HistorialEstadoPoliza[]
+  historialMora    HistorialMora[]
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  deletedAt        DateTime?
+
+  @@index([clienteId])
+  @@index([fechaVencimiento])
+}
+
+//////////////////////////////////////////////////////
+// MORA (estado actual)
+//////////////////////////////////////////////////////
+
+model Mora {
+  id              String   @id @default(uuid())
+  diasAtraso      Int
+  montoPendiente  Float
+  nivelRiesgo     NivelMora
+
+  polizaId        String   @unique
+  poliza          Poliza   @relation(fields: [polizaId], references: [id])
+
+  updatedAt       DateTime @updatedAt
+}
+
+//////////////////////////////////////////////////////
+// HISTORIAL DE MORA
+//////////////////////////////////////////////////////
+
+model HistorialMora {
+  id              String   @id @default(uuid())
+
+  polizaId        String
+  poliza          Poliza   @relation(fields: [polizaId], references: [id])
+
+  diasAtraso      Int
+  montoPendiente  Float
+
+  createdAt       DateTime @default(now())
+
+  @@index([polizaId])
+}
+
+//////////////////////////////////////////////////////
+// SEGUIMIENTOS
+//////////////////////////////////////////////////////
+
+model Seguimiento {
+  id              String   @id @default(uuid())
+
+  polizaId        String
+  poliza          Poliza   @relation(fields: [polizaId], references: [id])
+
+  usuarioId       String
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id])
+
+  tipo            TipoSeguimiento
+  comentario      String
+  resultado       String?
+  proximaAccion   DateTime?
+
+  createdAt       DateTime @default(now())
+
+  @@index([polizaId])
+  @@index([usuarioId])
+}
+
+//////////////////////////////////////////////////////
+// HISTORIAL DE ESTADOS DE POLIZA
+//////////////////////////////////////////////////////
+
+model HistorialEstadoPoliza {
+  id              String   @id @default(uuid())
+
+  polizaId        String
+  poliza          Poliza   @relation(fields: [polizaId], references: [id])
+
+  estadoAnterior  EstadoPoliza
+  estadoNuevo     EstadoPoliza
+
+  createdAt       DateTime @default(now())
+
+  @@index([polizaId])
+}
+
+//////////////////////////////////////////////////////
+// IMPORTACIONES
+//////////////////////////////////////////////////////
+
+model Importacion {
+  id                String   @id @default(uuid())
+
+  usuarioId         String?
+  usuario           Usuario? @relation(fields: [usuarioId], references: [id])
+
+  tipo              String
+  nombreArchivo     String
+
+  totalRegistros    Int
+  registrosExitosos Int
+  registrosError    Int
+
+  errores           ImportacionError[]
+
+  createdAt         DateTime @default(now())
+}
+
+//////////////////////////////////////////////////////
+// ERRORES DE IMPORTACION
+//////////////////////////////////////////////////////
+
+model ImportacionError {
+  id              String   @id @default(uuid())
+
+  importacionId   String
+  importacion     Importacion @relation(fields: [importacionId], references: [id])
+
+  fila            Int
+  error           String
+  data            Json
+
+  createdAt       DateTime @default(now())
+
+  @@index([importacionId])
+}
