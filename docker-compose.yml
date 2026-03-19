@@ -1,27 +1,46 @@
 services:
   db:
-    image: postgres
+    image: postgres:16
     container_name: agencia-db
     restart: always
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=db_agencia_507
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: insurance
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
     build: .
-    container_name: insurance_api
-    restart: always
-    ports:
-      - "3000:3005"
     depends_on:
-      - db
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: npm run start:dev
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "3000:3000"     # ← Agrega esto si quieres acceder desde el navegador
+    environment:
+      # ←←← CORREGIDO aquí
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/insurance?schema=public&connect_timeout=60"
 
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin5
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: guasimo12@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin_1204
+    ports:
+      - "8080:80"          # ← Cambié a 8080 para evitar conflicto con otros servicios
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
