@@ -1,4 +1,6 @@
+import { MoraUtils } from '@/config/config.service';
 import { Injectable } from '@nestjs/common';
+import { NivelMora } from '@prisma/client';
 import { PrismaService } from 'apps/api/prisma/prisma.service';
 
 @Injectable()
@@ -25,7 +27,7 @@ export class PolizasService {
     return this.prisma.poliza.findMany({
       where: {
         mora: {
-          nivelRiesgo: nivel,
+          nivelRiesgo: NivelMora.LEVE,
         },
       },
       include: {

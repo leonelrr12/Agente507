@@ -2,6 +2,13 @@ import { PrismaService } from 'apps/api/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import csv from 'csv-parser';
 import * as fs from 'fs';
+import { MoraUtils } from '@/config/config.service';
+
+type row_data = {
+  diasAtraso: number,
+  montoPendiente: number,
+  numeroPoliza: string
+}
 
 @Injectable()
 export class ImportacionesService {
@@ -29,23 +36,27 @@ export class ImportacionesService {
     });
   }
 
-  async procesarMora(row: any) {
+  async procesarMora(row: row_data) {
     const poliza = await this.prisma.poliza.findUnique({
-      where: { numeroPoliza: row.numero_poliza },
+      where: { numeroPoliza: row.numeroPoliza },
     });
 
     if (!poliza) throw new Error('Poliza no encontrada');
 
-    return this.prisma.mora.upsert({
+    const nivel = MoraUtils.calcularNivel(row.diasAtraso);
+    
+    return await this.prisma.mora.upsert({
       where: { polizaId: poliza.id },
       update: {
-        diasAtraso: Number(row.dias_atraso),
-        montoPendiente: Number(row.monto),
+        diasAtraso: row.diasAtraso,
+        montoPendiente: row.montoPendiente,
+        nivelRiesgo: nivel, 
       },
       create: {
         polizaId: poliza.id,
-        diasAtraso: Number(row.dias_atraso),
-        montoPendiente: Number(row.monto),
+        diasAtraso: row.diasAtraso,
+        montoPendiente: row.montoPendiente,
+        nivelRiesgo: nivel,
       },
     });
   }

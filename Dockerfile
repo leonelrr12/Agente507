@@ -21,10 +21,11 @@ RUN npx prisma generate --schema=./apps/api/prisma/schema.prisma
 
 #RUN npx prisma format --schema=./apps/api/prisma/schema.prisma
 #RUN npx prisma validate --schema=./apps/api/prisma/schema.prisma
+COPY ./apps/api/prisma.config.ts ./
 
-#RUN npx prisma migrate dev --schema=./apps/api/prisma/schema.prisma
+RUN npx prisma migrate dev --schema=./apps/api/prisma/schema.prisma
 
-#RUN npm run build
+RUN npm run build
 
 EXPOSE 3000
 
