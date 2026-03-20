@@ -1,10 +1,25 @@
 ###
 
+POST http://localhost:3000/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "guasimo01@gmail.com",
+    "password": "1234567"
+}
+
+
+###
+
 POST http://localhost:3000/clientes HTTP/1.1
 content-type: application/json
 
 {
-    "nombre": "Leonel"
+    "nombre": "Leonel",
+    "email": "guasimo01@gmail.com",
+    "cedula": "8-921-1234",
+    "telefono": "67890123",
+    "direccion": "Callejon del Gato"
 }
 
 

@@ -8,12 +8,13 @@ async function bootstrap() {
 
   app.enableCors();
   app.useLogger(['log', 'error', 'warn']);
+  app.setGlobalPrefix('api/v1')
 
   app.useGlobalPipes(
-  new ValidationPipe({
-    transform: true,
-  }),
-);
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   await app.listen(process.env.PORT || 3000);
 }
