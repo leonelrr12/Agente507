@@ -1,8 +1,8 @@
 ###
 
-POST http://localhost:3000/auth/login HTTP/1.1
+POST http://localhost:3000/api/v1/auth/login HTTP/1.1
 content-type: application/json
-
+Authorization: Bearer {{"sddfdfdffdfdfdfd"}}
 {
     "email": "guasimo01@gmail.com",
     "password": "1234567"
@@ -25,7 +25,9 @@ content-type: application/json
 
 ###
 
-GET http://localhost:3000/clientes HTTP/1.1
+GET http://localhost:3000/api/v1/clientes HTTP/1.1
+Authorization: Bearer {"sddfdfdffdfdfdfd"}
+
 
 ###
-GET http://localhost:3000/health
+GET http://localhost:3000/api/v1/health

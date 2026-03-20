@@ -1,10 +1,13 @@
 import {
   Controller,
   Get,
-  Query
+  Query,
+  UseGuards
 } from '@nestjs/common';
 import { PolizasService } from './polizas.service';
+import { AuthGuard } from '../auth/auth.guards';
 
+@UseGuards(AuthGuard)
 @Controller('polizas')
 export class PolizasController {
   constructor(private service: PolizasService) {}

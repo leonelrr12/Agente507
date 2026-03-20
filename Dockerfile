@@ -10,6 +10,7 @@ RUN npm install -D @nestjs/cli
 RUN npm install -D @types/node
 RUN npm install -D prisma@latest
 RUN npm install -D @prisma/client
+RUN npm install -D @types/express
 RUN npm install @prisma/adapter-pg
 RUN npm install @nestjs/config
 RUN npm install @nestjs/jwt jsonwebtoken
