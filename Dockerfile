@@ -16,6 +16,7 @@ RUN npm install @nestjs/jwt jsonwebtoken
 RUN npm install csv-parser
 RUN npm install fast-csv
 RUN npm install wait-on
+RUN npm install @nestjs/terminus
 
 RUN npm install
 

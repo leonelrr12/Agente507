@@ -13,6 +13,7 @@ import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { QueryClientesDto } from './dto/query-clientes.dto';
 
+
 @Controller('clientes')
 export class ClientesController {
   constructor(private service: ClientesService) {}
