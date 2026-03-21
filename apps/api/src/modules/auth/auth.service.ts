@@ -20,15 +20,9 @@ export class AuthService {
       if (!user) throw new UnauthorizedException('Credenciales inválidas');
 
       // validar password (bcrypt)
+      const isValid = await bcrypt.compare(password, user.passwordHash);
+      if (!isValid) throw new UnauthorizedException('Credenciales inválidas'); 
 
-    const isValid = await bcrypt.compare(password, user.passwordHash);
-     if (!isValid) {
-      throw new UnauthorizedException(
-        `Password incorrecto. Recibido: ${password.length} chars. Hash en DB: ${user.passwordHash?.length} chars.`
-      );
-    }    
-
-    if (!user) throw new UnauthorizedException('Credenciales inválidas - AAAAAAAAAAAAAAA');
       const payload = { sub: user.id };
 
       return {
