@@ -52,6 +52,7 @@ model Usuario {
   passwordHash String
   rol          RolUsuario @default(AGENTE)
   activo       Boolean  @default(true)
+  debeCambiarPassword Boolean @default(true)
 
   seguimientos Seguimiento[]
   importaciones Importacion[]   // 👈 🔥 AGREGA ESTA LÍNEA

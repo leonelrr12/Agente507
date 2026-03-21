@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from 'apps/api/prisma/prisma.service';
@@ -12,20 +12,32 @@ export class AuthService {
   ) {}
 
   async login(email: string, password: string) {
-    const user = await this.prisma.usuario.findUnique({
-      where: { email },
-    });
+    try {
+      const user = await this.prisma.usuario.findUnique({
+        where: { email },
+      });
 
-    if (!user) throw new UnauthorizedException('Credenciales inválidas');
+      if (!user) throw new UnauthorizedException('Credenciales inválidas');
 
-    // validar password (bcrypt)
+      // validar password (bcrypt)
+
     const isValid = await bcrypt.compare(password, user.passwordHash);
-    if (!isValid) throw new UnauthorizedException('Credenciales inválidas');
+     if (!isValid) {
+      throw new UnauthorizedException(
+        `Password incorrecto. Recibido: ${password.length} chars. Hash en DB: ${user.passwordHash?.length} chars.`
+      );
+    }    
 
-    const payload = { sub: user.id };
+    if (!user) throw new UnauthorizedException('Credenciales inválidas - AAAAAAAAAAAAAAA');
+      const payload = { sub: user.id };
 
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+      return {
+        access_token: this.jwtService.sign(payload),
+        debeCambiarPassword: user.debeCambiarPassword,
+      };
+    } catch (error: any) {
+      console.error('Login error:', error);
+      throw new BadRequestException(error.message || 'Error en el proceso de login');
+    }
   }
 }
