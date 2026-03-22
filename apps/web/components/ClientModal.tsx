@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { X, User, Phone, Mail, IdCard, MapPin, Loader2 } from 'lucide-react';
+import { X, User, Phone, Mail, IdCard, MapPin, Loader2, Sparkles } from 'lucide-react';
 import api from '@/lib/api';
 
 const clientSchema = z.object({
@@ -21,7 +21,7 @@ interface ClientModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  client?: any; // If provided, we are editing
+  client?: any;
 }
 
 export default function ClientModal({ isOpen, onClose, onSuccess, client }: ClientModalProps) {
@@ -35,11 +35,7 @@ export default function ClientModal({ isOpen, onClose, onSuccess, client }: Clie
   } = useForm<ClientFormValues>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
-      nombre: '',
-      cedula: '',
-      telefono: '',
-      email: '',
-      direccion: '',
+      nombre: '', cedula: '', telefono: '', email: '', direccion: '',
     },
   });
 
@@ -53,13 +49,7 @@ export default function ClientModal({ isOpen, onClose, onSuccess, client }: Clie
         direccion: client.direccion || '',
       });
     } else {
-      reset({
-        nombre: '',
-        cedula: '',
-        telefono: '',
-        email: '',
-        direccion: '',
-      });
+      reset({ nombre: '', cedula: '', telefono: '', email: '', direccion: '' });
     }
   }, [client, reset, isOpen]);
 
@@ -74,125 +64,131 @@ export default function ClientModal({ isOpen, onClose, onSuccess, client }: Clie
       onClose();
     } catch (error) {
       console.error('Error saving client:', error);
-      alert('Error al guardar el cliente. Por favor intente de nuevo.');
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
       <div 
-        className="bg-[#1a1d27] border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200"
+        className="relative bg-[#1a1d27] border border-white/10 w-full max-w-xl rounded-[2rem] shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)] overflow-hidden animate-in zoom-in-95 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Decorative background glow */}
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-blue-600/10 blur-[100px] pointer-events-none" />
+        
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-800/20">
-          <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-            {isEditing ? 'Editar Cliente' : 'Nuevo Cliente'}
-          </h2>
+        <div className="relative px-8 pt-8 pb-6 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="p-1 px-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-bold text-blue-400 uppercase tracking-widest">
+                Gestión
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+              {isEditing ? 'Editar Cliente' : 'Nuevo Registro'}
+              {!isEditing && <Sparkles className="w-5 h-5 text-blue-400" />}
+            </h2>
+          </div>
           <button 
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            className="p-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-full transition-all"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
-          {/* Nombre */}
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
-              <User className="w-3.5 h-3.5" />
-              Nombre Completo
-            </label>
-            <input
-              {...register('nombre')}
-              placeholder="Ej: Juan Pérez"
-              className={`w-full bg-[#0f1117] border ${errors.nombre ? 'border-red-500/50 focus:ring-red-500/20' : 'border-slate-700 focus:border-blue-500/50 focus:ring-blue-500/20'} rounded-xl px-4 py-2.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 transition-all`}
-            />
-            {errors.nombre && <p className="text-xs text-red-400 mt-1">{errors.nombre.message}</p>}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Cédula */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
-                <IdCard className="w-3.5 h-3.5" />
-                Cédula / ID
+        {/* Action Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="px-8 pb-8 space-y-6">
+          <div className="space-y-5">
+            {/* Nombre */}
+            <div className="space-y-2 group">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">
+                Nombre Completo
               </label>
-              <input
-                {...register('cedula')}
-                placeholder="0-000-0000"
-                className="w-full bg-[#0f1117] border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/20 transition-all"
-              />
-            </div>
-
-            {/* Teléfono */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5" />
-                Teléfono
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
+                <input
+                  {...register('nombre')}
+                  placeholder="Ej: Eduardo Rodriguez"
+                  className={`w-full bg-black/20 border ${errors.nombre ? 'border-red-500/50' : 'border-white/5 focus:border-blue-500/50'} rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all shadow-inner`}
+                />
               </div>
-              <input
-                {...register('telefono')}
-                placeholder="+507 6000-0000"
-                className="w-full bg-[#0f1117] border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/20 transition-all"
-              />
+              {errors.nombre && <p className="text-[10px] font-bold text-red-400 uppercase tracking-wider ml-1">{errors.nombre.message}</p>}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Cédula */}
+              <div className="space-y-2 group">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Cédula</label>
+                <div className="relative">
+                  <IdCard className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
+                  <input
+                    {...register('cedula')}
+                    placeholder="8-921-1234"
+                    className="w-full bg-black/20 border border-white/5 focus:border-blue-500/50 rounded-2xl pl-11 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all shadow-inner"
+                  />
+                </div>
+              </div>
+
+              {/* Teléfono */}
+              <div className="space-y-2 group">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Teléfono</label>
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
+                  <input
+                    {...register('telefono')}
+                    placeholder="6000-0000"
+                    className="w-full bg-black/20 border border-white/5 focus:border-blue-500/50 rounded-2xl pl-11 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all shadow-inner"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="space-y-2 group">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
+                <input
+                  {...register('email')}
+                  placeholder="cliente@correo.com"
+                  className="w-full bg-black/20 border border-white/5 focus:border-blue-500/50 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all shadow-inner"
+                />
+              </div>
+            </div>
+
+            {/* Dirección */}
+            <div className="space-y-2 group">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Dirección</label>
+              <div className="relative">
+                <MapPin className="absolute left-4 top-4 w-4.5 h-4.5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
+                <textarea
+                  {...register('direccion')}
+                  placeholder="Provincia, Distrito, Corregimiento..."
+                  rows={2}
+                  className="w-full bg-black/20 border border-white/5 focus:border-blue-500/50 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all shadow-inner resize-none"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Email */}
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
-              <Mail className="w-3.5 h-3.5" />
-              Correo Electrónico
-            </label>
-            <input
-              {...register('email')}
-              placeholder="ejemplo@correo.com"
-              className={`w-full bg-[#0f1117] border ${errors.email ? 'border-red-500/50 focus:ring-red-500/20' : 'border-slate-700 focus:border-blue-500/50 focus:ring-blue-500/20'} rounded-xl px-4 py-2.5 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 transition-all`}
-            />
-            {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>}
-          </div>
-
-          {/* Dirección */}
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
-              <MapPin className="w-3.5 h-3.5" />
-              Dirección
-            </label>
-            <textarea
-              {...register('direccion')}
-              placeholder="Dirección completa..."
-              rows={3}
-              className="w-full bg-[#0f1117] border border-slate-700 rounded-xl px-4 py-2.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/20 transition-all resize-none"
-            />
-          </div>
-
-          {/* Footer Buttons */}
-          <div className="pt-4 flex items-center gap-3">
+          <div className="pt-4 flex items-center gap-4">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-medium py-2.5 rounded-xl transition-colors"
+              className="flex-1 text-slate-400 font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-2xl hover:bg-white/5 transition-all"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-2 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:opacity-50 text-white font-medium py-2.5 px-8 rounded-xl transition-all flex items-center justify-center gap-2 min-w-[140px]"
+              className="flex-[2] bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/30 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
             >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Guardando...
-                </>
-              ) : (
-                isEditing ? 'Actualizar' : 'Crear Cliente'
-              )}
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              {isEditing ? 'Guardar Cambios' : 'Registrar Cliente'}
             </button>
           </div>
         </form>

@@ -38,8 +38,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZWUyN2U2N
 
 ###
 
-GET http://localhost:3000/api/v1/clientes?search=8-921-1234 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDQ3MjliYy1lOGFjLTQ0Y2ItODBmMS1iOGZjNzdmM2FiMTMiLCJpYXQiOjE3NzQyMTcxNDEsImV4cCI6MTc3NDMwMzU0MX0.0hp12fRW-HtXl_vnutOmjlZLHyDQU6NXrevx0_caPtc
+GET http://localhost:3000/api/v1/clientes HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDQ3MjliYy1lOGFjLTQ0Y2ItODBmMS1iOGZjNzdmM2FiMTMiLCJpYXQiOjE3NzQyMTg5NzEsImV4cCI6MTc3NDMwNTM3MX0.cofpzwqu2_zWN6VucTjTYqFCIljHapeyrxkKfcJgvnI
 
 
 ###
