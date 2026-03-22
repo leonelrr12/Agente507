@@ -1,48 +1,37 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Query,
-  Put,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
-
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { QueryClientesDto } from './dto/query-clientes.dto';
+
 import { AuthGuard } from '../auth/auth.guards';
 
 @UseGuards(AuthGuard)
 @Controller('clientes')
 export class ClientesController {
-  constructor(private service: ClientesService) {}
+  constructor(private readonly clientesService: ClientesService) {}
 
   @Post()
-  create(@Body() dto: CreateClienteDto) {
-    return this.service.create(dto);
+  create(@Body() createClienteDto: CreateClienteDto) {
+    return this.clientesService.create(createClienteDto);
   }
-
 
   @Get()
   findAll(@Query() query: QueryClientesDto) {
-    return this.service.findAll(query);
+    return this.clientesService.findAll(query);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+    return this.clientesService.findOne(id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() dto: CreateClienteDto) {
-    return this.service.update(id, dto);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() data: any) {
+    return this.clientesService.update(id, data);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.service.remove(id);
+    return this.clientesService.remove(id);
   }
 }

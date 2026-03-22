@@ -12,15 +12,28 @@ export class ClientesService {
   }
 
   async findAll(query: QueryClientesDto) {
+    const { search, page = 1, limit = 20 } = query;
+
+    const where = search
+      ? {
+          OR: [
+            { nombre: { contains: search, mode: 'insensitive' as any } },
+            { cedula: { contains: search, mode: 'insensitive' as any } },
+          ],
+          deletedAt: null as any,
+        }
+      : { deletedAt: null as any };
+
     return this.prisma.cliente.findMany({
-      where: {
-        nombre: {
-          contains: query.search,
-          mode: 'insensitive',
+      where,
+      include: {
+        _count: {
+          select: { polizas: true },
         },
       },
-      take: Number(query.limit) || 20,
-      skip: ((query.page || 1) - 1) * (query.limit || 20),
+      take: Number(limit),
+      skip: (Number(page) - 1) * Number(limit),
+      orderBy: { nombre: 'asc' },
     });
   }
 

@@ -23,8 +23,9 @@ content-type: application/json
 
 ###
 
-POST http://localhost:3000/clientes HTTP/1.1
+POST http://localhost:3000/api/v1/clientes HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZWUyN2U2Ny1lNDVhLTQ2NWQtYWU3Yy02NDNjMGI5N2I1ZDgiLCJpYXQiOjE3NDI3NjM5MjksImV4cCI6MTc0Mjg1MDMyOX0.c9yH4K7Fm5mAtWd88vXmP881Wk7KR2mex1jM4mb0
 
 {
     "nombre": "Leonel",
@@ -38,7 +39,7 @@ content-type: application/json
 ###
 
 GET http://localhost:3000/api/v1/clientes HTTP/1.1
-Authorization: Bearer {"sddfdfdffdfdfdfd"}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZWUyN2U2Ny1lNDVhLTQ2NWQtYWU3Yy02NDNjMGI5N2I1ZDgiLCJpYXQiOjE3NDI3NjM5MjksImV4cCI6MTc0Mjg1MDMyOX0.c9yH4K7Fm5mAtWd88vXmP881Wk7KR2mex1jM4mb0
 
 
 ###
