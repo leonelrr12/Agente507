@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { X, User, Phone, Mail, IdCard, MapPin, Loader2, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { X, User, Phone, Mail, IdCard, MapPin, Loader2, Sparkles, Shield } from 'lucide-react';
 import api from '@/lib/api';
 
 const clientSchema = z.object({
@@ -25,6 +26,7 @@ interface ClientModalProps {
 }
 
 export default function ClientModal({ isOpen, onClose, onSuccess, client }: ClientModalProps) {
+  const router = useRouter();
   const isEditing = !!client;
 
   const {
@@ -182,6 +184,22 @@ export default function ClientModal({ isOpen, onClose, onSuccess, client }: Clie
             >
               Cancelar
             </button>
+            
+            {/* Quick access to policies only when editing */}
+            {isEditing && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  router.push(`/clientes/${client.id}?addPoliza=true`);
+                }}
+                className="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-bold text-xs uppercase tracking-[0.2em] py-4 rounded-2xl border border-emerald-500/20 transition-all flex items-center justify-center gap-2"
+              >
+                <Shield className="w-4 h-4" />
+                + Póliza
+              </button>
+            )}
+
             <button
               type="submit"
               disabled={isSubmitting}

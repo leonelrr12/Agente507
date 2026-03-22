@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { 
   ArrowLeft, 
   User, 
@@ -12,7 +12,6 @@ import {
   FileText, 
   Calendar, 
   ShieldCheck, 
-  ExternalLink,
   Edit2,
   Trash2,
   AlertCircle
@@ -52,7 +51,7 @@ export default function ClienteDetailPage() {
   const [cliente, setCliente] = useState<Cliente | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // Modals state
+  const searchParams = useSearchParams();
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
   const [isPolizaModalOpen, setIsPolizaModalOpen] = useState(false);
   const [selectedPoliza, setSelectedPoliza] = useState<any>(null);
@@ -71,7 +70,10 @@ export default function ClienteDetailPage() {
 
   useEffect(() => {
     fetchCliente();
-  }, [id]);
+    if (searchParams.get('addPoliza') === 'true') {
+      setIsPolizaModalOpen(true);
+    }
+  }, [id, searchParams]);
 
   const handleEditPoliza = (poliza: any) => {
     setSelectedPoliza(poliza);
@@ -107,7 +109,6 @@ export default function ClienteDetailPage() {
   };
 
   if (loading) {
-// ... existing loading UI ...
     return (
       <div className="p-8 space-y-6 animate-pulse">
         <div className="h-8 w-32 bg-slate-800 rounded-lg" />
@@ -164,8 +165,74 @@ export default function ClienteDetailPage() {
         </div>
       </div>
 
-      {/* Main Info Card ... omitting for brevity ... */}
-      
+      {/* Main Info Card */}
+      <div className="bg-[#1a1d27] border border-slate-800/50 rounded-3xl overflow-hidden shadow-xl">
+        <div className="bg-gradient-to-r from-blue-600/10 via-indigo-600/5 to-transparent p-8 md:p-10 border-b border-slate-800/50">
+          <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
+            <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-3xl font-bold text-white shadow-2xl shadow-blue-600/40 ring-4 ring-[#1a1d27]">
+              {cliente.nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+            </div>
+            <div className="space-y-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">{cliente.nombre}</h1>
+              <div className="flex flex-wrap gap-4 items-center">
+                <span className="flex items-center gap-1.5 text-slate-400 text-sm">
+                  <IdCard className="w-4 h-4 text-blue-400" />
+                  {cliente.cedula || 'Sin cédula'}
+                </span>
+                <div className="w-1 h-1 bg-slate-700 rounded-full hidden md:block" />
+                <span className="flex items-center gap-1.5 text-slate-400 text-sm">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  {cliente.polizas.length} Pólizas registradas
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Contact Details */}
+          <div className="space-y-6">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Información de contacto</h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-800/50">
+                <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Teléfono</p>
+                  <p className="text-white font-semibold">{cliente.telefono || '—'}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-800/50">
+                <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div className="overflow-hidden">
+                  <p className="text-xs text-slate-500 font-medium">Email</p>
+                  <p className="text-white font-semibold truncate">{cliente.email || '—'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="lg:col-span-2 space-y-6">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Ubicación registrada</h3>
+            <div className="flex items-start gap-4 p-6 rounded-2xl bg-slate-800/30 border border-slate-800/50 min-h-[120px]">
+              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 font-medium italic mb-2">Residencia / Oficina</p>
+                <p className="text-white leading-relaxed font-medium">
+                  {cliente.direccion || 'No se ha registrado una dirección física para este cliente.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Pólizas Table */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
