@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'apps/api/prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { CreateSeguimientoDto } from './dto/create-seguimiento.dto';
 
 @Injectable()
@@ -7,11 +7,11 @@ export class SeguimientosService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateSeguimientoDto) {
-    const { proximaLamada, ...resto } = data;
+    const { proximaAccion, ...resto } = data;
     return this.prisma.seguimiento.create({
       data: {
         ...resto,
-        proximaLamada: proximaLamada ? new Date(proximaLamada) : undefined,
+        proximaAccion: proximaAccion ? new Date(proximaAccion) : undefined,
       },
       include: {
         poliza: {

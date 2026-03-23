@@ -6,6 +6,8 @@ import { AuthModule } from '@/modules/auth/auth.module';
 import { PolizasModule } from '@/modules/polizas/polizas.module';
 import { UsuariosModule } from './src/modules/usuarios/usuarios.module';
 import { AseguradorasModule } from './src/modules/aseguradoras/aseguradoras.module';
+import { DashboardModule } from './src/modules/dashboard/dashboard.module';
+import { SeguimientosModule } from './src/modules/seguimientos/seguimientos.module';
 
 @Module({
   imports: [
@@ -15,7 +17,9 @@ import { AseguradorasModule } from './src/modules/aseguradoras/aseguradoras.modu
     PolizasModule,
     AuthModule,
     UsuariosModule,
-    AseguradorasModule
+    AseguradorasModule,
+    DashboardModule,
+    SeguimientosModule
   ],
 })
 export class AppModule { }

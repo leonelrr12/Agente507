@@ -40,8 +40,8 @@ interface Mora {
 
 const riskBadge: Record<string, { label: string; className: string }> = {
   LEVE:    { label: 'Leve',    className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
-  GRAVE:   { label: 'Grave',   className: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
-  CRITICO: { label: 'Crítico', className: 'bg-red-500/10 text-red-500 border-red-500/20 shadow-[0_0_15px_-5px_rgba(239,68,68,0.3)]' },
+  MEDIA:   { label: 'Media',   className: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
+  CRITICA: { label: 'Crítica', className: 'bg-red-500/10 text-red-500 border-red-500/20 shadow-[0_0_15px_-5px_rgba(239,68,68,0.3)]' },
 };
 
 export default function MoraPage() {

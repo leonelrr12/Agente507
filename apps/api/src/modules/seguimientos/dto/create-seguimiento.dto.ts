@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString, IsUUID, IsDateString } from 'class-validator';
-import { TipoSeguimiento, ResultadoSeguimiento } from '@prisma/client';
+import { TipoSeguimiento } from '@prisma/client';
 
 export class CreateSeguimientoDto {
   @IsUUID()
@@ -8,15 +8,16 @@ export class CreateSeguimientoDto {
   @IsEnum(TipoSeguimiento)
   tipo!: TipoSeguimiento;
 
-  @IsEnum(ResultadoSeguimiento)
-  resultado!: ResultadoSeguimiento;
+  @IsOptional()
+  @IsString()
+  resultado?: string;
 
   @IsString()
-  observacion!: string;
+  comentario!: string;
 
   @IsOptional()
   @IsDateString()
-  proximaLamada?: string;
+  proximaAccion?: string;
 
   @IsUUID()
   usuarioId!: string;
