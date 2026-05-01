@@ -4,6 +4,7 @@ import { CreateClienteDto } from './dto/create-cliente.dto';
 import { QueryClientesDto } from './dto/query-clientes.dto';
 
 import { AuthGuard } from '../auth/auth.guards';
+import { UpdateClienteDto } from './dto/update-cliente.dto';
 
 @UseGuards(AuthGuard)
 @Controller('clientes')
@@ -26,7 +27,7 @@ export class ClientesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: any) {
+  update(@Param('id') id: string, @Body() data: UpdateClienteDto) {
     return this.clientesService.update(id, data);
   }
 
